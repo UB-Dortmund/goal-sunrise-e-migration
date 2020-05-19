@@ -5,7 +5,7 @@
            version="1">
 
     <meta> <!-- Metadata -->
-        <name>Enrich SISIS-MARC-XML with additional collection marker</name>
+        <name>SISIS-MARC-XML-EXCLUDE-MARKER</name>
     </meta>
 
     <macros> <!-- Macro definitions --> </macros>
@@ -16,10 +16,21 @@
            >>> ENRICHMENT <<<
         -->
 
-		<!-- TODO Fall EZB 856.x=EZB -->
+        <!-- add new "035  .a" based on Catkey map -->
+        <entity name="035  " flushWith="record">
+			<concat name="a" delimiter="">
+				<data source="001">
+					<whitelist map="id_map"/>
+					<lookup in="id_map" default="" />
+					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+				</data>
+                <data source="001">
+					<whitelist map="id_map"/>
+                </data>
+			</concat>
+		</entity>
 
-        <!-- TODO nur IZEXCLUDE -->
-        <!-- add new "035  .a" based on izexclude hbz-ID map -->
+		<!-- add new "035  .a" based hbz-ID -->
         <entity name="035  " flushWith="record">
 			<concat name="a" delimiter="">
 				<data source="035??.a">
@@ -35,19 +46,20 @@
 			</concat>
 		</entity>
 
-        <!-- add new "035  .a" based on izexclude Katkey map -->
+		<!-- add new "035  .a" based on 856??.u contains URL with pattern "/ezeit/?" -->
         <entity name="035  " flushWith="record">
 			<concat name="a" delimiter="">
-				<data source="001">
-					<whitelist map="id_map"/>
-					<lookup in="id_map" default="" />
-					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+				<data source="856??.u">
+					<contains string="/ezeit/?" />
+					<compose prefix="(IZEXCLUDE)(EZEIT)"/>
 				</data>
                 <data source="001">
-					<whitelist map="id_map"/>
+					<contains string="/ezeit/?" />
                 </data>
 			</concat>
 		</entity>
+
+		<!-- TODO Fall 9xx.x als Selektions- und Suchkennzeichen in Alma -> evtl. als neues subfield -->
 
 		<!--
            >>> COPY ALL SOURCES TO TARGET <<<
@@ -55,9 +67,17 @@
 
         <data name="001" source="001"/>
 
-		<entity name="035  " flushWith="record">
-			<data source="035  .a" name="a" />
-		</entity>
+		<data source="035  .a" name="a" />
+
+		<data source="8564 .q" name="q" />
+		<data source="8564 .u" name="u" />
+		<data source="8564 .x" name="x" />
+		<data source="8564 .3" name="3" />
+
+		<data source="85640.q" name="q" />
+		<data source="85640.u" name="u" />
+		<data source="85640.x" name="x" />
+		<data source="85640.3" name="3" />
 
 		<data source="_else" />
 

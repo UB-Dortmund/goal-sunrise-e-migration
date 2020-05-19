@@ -127,8 +127,6 @@ if __name__ == '__main__':
     id_map = {**id_map, **build_id_map(source_dir=config.NZEXCLUDE_DIR, files=id_files, marker='NZ')}
     id_files = [f for f in listdir('%s' % config.IZEXCLUDE_DIR) if isfile(join('%s' % config.IZEXCLUDE_DIR, f))]
     id_map = {**id_map, **build_id_map(source_dir=config.IZEXCLUDE_DIR, files=id_files, marker='IZ')}
-    id_files = [f for f in listdir('%s' % config.EZBEXCLUDE_DIR) if isfile(join('%s' % config.EZBEXCLUDE_DIR, f))]
-    id_map = {**id_map, **build_id_map(source_dir=config.EZBEXCLUDE_DIR, files=id_files, marker='EZB')}
 
     # write id map as TSV file
     Path(config.ID_MAP_DIR).mkdir(parents=True, exist_ok=True)

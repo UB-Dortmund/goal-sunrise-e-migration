@@ -12,19 +12,14 @@ https://www.ub.tu-dortmund.de
 
 ## Konzept aus der FEx Daten
 
-Das hbz stellt ca. 2 Wochen vor der 1. Testmigration ID-Listen mit
-hbz-Titel-IDs, getrennt nach Kollektionen, zu Verfügung. Diese
-Titeldaten wird das hbz entweder bei der Migration aus der CZ in der NZ
+Das hbz stellt ID-Listen mit hbz-Titel-IDs, getrennt nach Kollektionen, zu Verfügung. 
+Diese Titeldaten wird das hbz entweder bei der Migration aus der CZ in der NZ
 aktivieren oder als P2E migrieren. Diese Titelmengen sind bei der
 Migration aus den ILS auszuschließen und über Feld MARC-035 zu markieren
 mittels Textstring IZEXCLUDE.
 
-(IZEXCLUDE ist das Hauptkriterium für ExLibris -> Alle Titel werden mit IZEXCLUDE markiert;
-ggf. zusätzliche Marker gesetzt.)
-
 **Technische Lösung SISIS:**
 
-- konzeptionell wie Aleph
 - die technische Umsetzung findet per Batch im Filesystem auf Basis der
 extrahierten Daten statt (Manipulation der MARC-XML-Datei)
 - die technische Lösung wird von der UB Dortmund (Hr. Becker)
@@ -40,25 +35,106 @@ Stand kein Unterfeld 9 mit dem Wert "local" ergänzt werden. Das Feld 035
 kann zurzeit noch nicht in Alma als "local extension" genutzt werden.
 Lösung: zusätzlich zum Feld 035 ein lokales Feld (9xx) erzeugen.
 
-## NEU!!!! EZB-Titel via URL (Pattern: ezeit)
-
-Pattern: ezeit oder 663 mit "Interna: EZB; Bez.: 0" -> EXCLUDE
-
+**TODO:** Definition der lokalen Felder (9xx)
 
 ## Umsetzung der technischen Lösung für SISIS
 
-* Install OpenJDK 8
-* Install Python 3
-* Get e-migration project -> github
-* Edit config.py -> Erläuterungen
-* Start
+Das Skript erwartet ID-Listen des hbz im Ordner `data/id_lists/nzexclude`. Die Listen
+aus Sicht der IZ werden in `data/id_lists/izexclude` erwartet.
+
+Die Listen sind einfache Textdateien, in der pro Zeile eine hbz-ID oder ein Catkey enthalten ist.
+
+Für die NZ z.B.
+
+```
+HT017065150
+HT019609130
+```
+
+bzw. für die IZ:
+
+```
+1505893
+1506737
+1660270
+1578603
+1494764
+1649744
+```
+
+Für die NZ-Fälle wird folgendes im MARCXML-Record ergänzt:
+
+```
+<marc:datafield tag="035" ind1=" " ind2=" ">
+        <marc:subfield code="a">(IZEXCLUDE)(NZ)HT017065150</marc:subfield>
+</marc:datafield>
+```
+
+Für die IZ-Fälle gilt:
+
+```
+<marc:datafield tag="035" ind1=" " ind2=" ">
+        <marc:subfield code="a">(IZEXCLUDE)(IZ)1505893</marc:subfield>
+</marc:datafield>
+```
+
+Ferner prüft das Skript, ob in `85640.u` oder `8564 .u` das Pattern `/ezeit/?` enthalten ist.
+Sollte das der Fall sein, wird folgendes im MARCXML-Record ergänzt:
+
+```
+<marc:datafield tag="035" ind1=" " ind2=" ">
+        <marc:subfield code="a">(IZEXCLUDE)(EZB)1674734</marc:subfield>
+</marc:datafield>
+```
+
+Das Skript zerlegt die MARCXML-Quelldatei aus SISIS in Teildateien mit 200.000 Records, da
+das Limit von ExLibris auf diese Anzahl angegeben ist. Die Anzahl kann in der Konfiguration
+auch angepasst werden (Parameter `PART_SIZE`).
+
+## Installation der Lösung
+
+* Installieren von OpenJDK 8
+* Installieren von Python >= 3.6
+* `git clone https://github.com/UB-Dortmund/goal-sunrise-e-migration`
+* ggf. anpassen der Konfiguration
+* Start: `/usr/bin/python3.6 e-migration.py` (ggf. vorher noch ins Code-Verzeichnis wechseln)
 * Be happy :-)
+
+**Konfiguration:**
+
+Editieren der Datei `config.py` (falls notwendig):
+
+```
+# ID lists
+NZEXCLUDE_DIR = 'data/id_lists/nzexclude'
+IZEXCLUDE_DIR = 'data/id_lists/izexclude'
+
+ID_MAP_DIR = 'data/tmp/id_maps'
+
+# DATA CONF
+#SOURCES_DIR = 'data/sources'
+SOURCES_DIR = '/home/mhagbeck/data/GOAL/src'
+TMP_SOURCES_DIR = 'data/tmp/sources'
+RESULTS_DIR = 'data/results'
+
+PART_SIZE = 200000
+
+# METAFACTURE
+FLUX_START_SCRIPT = 'metafacture/dist/flux.sh'
+METAFACTURE_PROJECTS_DIR = 'metafacture/project'
+
+NUMBER_OF_WORKERS = 8
+
+# LOGGING
+LOG_FILE = 'log/e-migration.log'
+```
+
 
 # License
 
 > MIT License
 
-> UB Dortmund <daten.ub@tu-dortmund.de> 
+> Copyright 2020 UB Dortmund <daten.ub@tu-dortmund.de> 
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

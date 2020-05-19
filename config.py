@@ -1,13 +1,12 @@
 # ID lists
 NZEXCLUDE_DIR = 'data/id_lists/nzexclude'
 IZEXCLUDE_DIR = 'data/id_lists/izexclude'
-EZBEXCLUDE_DIR = 'data/id_lists/ezb'
 
 ID_MAP_DIR = 'data/tmp/id_maps'
 
 # DATA CONF
-#SOURCES_DIR = 'data/sources'
-SOURCES_DIR = '/home/mhagbeck/data/GOAL/src'
+SOURCES_DIR = 'data/sources'
+# SOURCES_DIR = '/home/mhagbeck/data/GOAL/src'
 TMP_SOURCES_DIR = 'data/tmp/sources'
 RESULTS_DIR = 'data/results'
 
