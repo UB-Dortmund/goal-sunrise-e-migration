@@ -94,10 +94,14 @@ auch angepasst werden (Parameter `PART_SIZE`).
 ## Installation der Lösung
 
 * Installieren von OpenJDK 8
-* Installieren von Python >= 3.6
-* `git clone https://github.com/UB-Dortmund/goal-sunrise-e-migration`
+* ggf. Installieren von Python >= 3.6
+* Installieren des Skripts
+    * `git clone https://github.com/UB-Dortmund/goal-sunrise-e-migration`
+    * `mkdir log`
+    * ggf. `mkdir data/sources`und kopieren der Quelldateien in dieses Verzeichnis
 * ggf. anpassen der Konfiguration
-* Start: `/usr/bin/python3.6 e-migration.py` (ggf. vorher noch ins Code-Verzeichnis wechseln)
+* Starten: `/usr/bin/python3 e-migration.py` (ggf. vorher noch ins Code-Verzeichnis wechseln)
+* Warten ...
 * Be happy :-)
 
 **Konfiguration:**
