@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd"
+           version="1">
+
+    <meta> <!-- Metadata -->
+        <name>Enrich SISIS-MARC-XML with additional collection marker</name>
+    </meta>
+
+    <macros> <!-- Macro definitions --> </macros>
+
+    <rules> <!-- Transformation rules-->
+
+        <!--
+           >>> ENRICHMENT <<<
+        -->
+
+		<!-- TODO Fall EZB 856.x=EZB -->
+
+        <!-- TODO nur IZEXCLUDE -->
+        <!-- add new "035  .a" based on izexclude hbz-ID map -->
+        <entity name="035  " flushWith="record">
+			<concat name="a" delimiter="">
+				<data source="035??.a">
+					<replace pattern="\(UNION_SEAL\)"  with=""/>
+					<whitelist map="id_map"/>
+					<lookup in="id_map" default="" />
+					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+				</data>
+                <data source="035??.a">
+					<replace pattern="\(UNION_SEAL\)"  with=""/>
+					<whitelist map="id_map"/>
+                </data>
+			</concat>
+		</entity>
+
+        <!-- add new "035  .a" based on izexclude Katkey map -->
+        <entity name="035  " flushWith="record">
+			<concat name="a" delimiter="">
+				<data source="001">
+					<whitelist map="id_map"/>
+					<lookup in="id_map" default="" />
+					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+				</data>
+                <data source="001">
+					<whitelist map="id_map"/>
+                </data>
+			</concat>
+		</entity>
+
+		<!--
+           >>> COPY ALL SOURCES TO TARGET <<<
+        -->
+
+        <data name="001" source="001"/>
+
+		<entity name="035  " flushWith="record">
+			<data source="035  .a" name="a" />
+		</entity>
+
+		<data source="_else" />
+
+    </rules>
+
+    <maps>
+        <filemap name="id_map" files="$[id_map]"/>
+    </maps>
+
+</metamorph>
