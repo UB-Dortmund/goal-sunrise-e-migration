@@ -35,7 +35,7 @@ Stand kein Unterfeld 9 mit dem Wert "local" ergänzt werden. Das Feld 035
 kann zurzeit noch nicht in Alma als "local extension" genutzt werden.
 Lösung: zusätzlich zum Feld 035 ein lokales Feld (9xx) erzeugen.
 
-Das lokale Feld wurde als "980  .t" definiert und enthält neben Zeichenketten der Form 
+Das lokale Feld wurde als `980  .t` definiert und enthält Zeichenketten der Form 
 `IZEXCLUDE-{REASON}` mit `REASON = NZ|IZ|EZB`.
 
 ## Umsetzung der technischen Lösung für SISIS
