@@ -35,7 +35,8 @@ Stand kein Unterfeld 9 mit dem Wert "local" ergänzt werden. Das Feld 035
 kann zurzeit noch nicht in Alma als "local extension" genutzt werden.
 Lösung: zusätzlich zum Feld 035 ein lokales Feld (9xx) erzeugen.
 
-**TODO:** Definition der lokalen Felder (9xx)
+Das lokale Feld wurde als "980  .t" definiert und enthält neben Zeichenketten der Form 
+`IZEXCLUDE-{REASON}` mit `REASON = NZ|IZ|EZB`.
 
 ## Umsetzung der technischen Lösung für SISIS
 
@@ -66,7 +67,10 @@ Für die NZ-Fälle wird folgendes im MARCXML-Record ergänzt:
 
 ```
 <marc:datafield tag="035" ind1=" " ind2=" ">
-        <marc:subfield code="a">(IZEXCLUDE)(NZ)HT017065150</marc:subfield>
+        <marc:subfield code="a">(IZEXCLUDE)HT017065150</marc:subfield>
+</marc:datafield>
+<marc:datafield tag="980" ind1=" " ind2=" ">
+        <marc:subfield code="t">IZEXCLUDE-NZ</marc:subfield>
 </marc:datafield>
 ```
 
@@ -74,7 +78,10 @@ Für die IZ-Fälle gilt:
 
 ```
 <marc:datafield tag="035" ind1=" " ind2=" ">
-        <marc:subfield code="a">(IZEXCLUDE)(IZ)1505893</marc:subfield>
+        <marc:subfield code="a">(IZEXCLUDE)1505893</marc:subfield>
+</marc:datafield>
+<marc:datafield tag="980" ind1=" " ind2=" ">
+        <marc:subfield code="t">IZEXCLUDE-IZ</marc:subfield>
 </marc:datafield>
 ```
 
@@ -83,7 +90,10 @@ Sollte das der Fall sein, wird folgendes im MARCXML-Record ergänzt:
 
 ```
 <marc:datafield tag="035" ind1=" " ind2=" ">
-        <marc:subfield code="a">(IZEXCLUDE)(EZB)1674734</marc:subfield>
+        <marc:subfield code="a">(IZEXCLUDE)1674734</marc:subfield>
+</marc:datafield>
+<marc:datafield tag="980" ind1=" " ind2=" ">
+        <marc:subfield code="t">IZEXCLUDE-EZB</marc:subfield>
 </marc:datafield>
 ```
 
