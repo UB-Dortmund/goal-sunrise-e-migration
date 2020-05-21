@@ -16,50 +16,69 @@
            >>> ENRICHMENT <<<
         -->
 
-        <!-- add new "035  .a" based on Catkey map -->
+        <!-- add new "035  .a" based on Catkey -->
         <entity name="035  " flushWith="record">
-			<concat name="a" delimiter="">
+			<data name="a" source="001">
+				<whitelist map="id_map"/>
+				<compose prefix="(IZEXCLUDE)" />
+			</data>
+		</entity>
+        <!-- add new "980  .t" based on Catkey -->
+        <entity name="980  " flushWith="record">
+			<concat name="t" delimiter="-">
 				<data source="001">
 					<whitelist map="id_map"/>
-					<lookup in="id_map" default="" />
-					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+					<constant value="IZEXCLUDE" />
 				</data>
                 <data source="001">
 					<whitelist map="id_map"/>
+					<lookup in="id_map" default="" />
                 </data>
 			</concat>
 		</entity>
 
 		<!-- add new "035  .a" based hbz-ID -->
         <entity name="035  " flushWith="record">
-			<concat name="a" delimiter="">
-				<data source="035??.a">
+			<data source="035??.a">
+				<replace pattern="\(UNION_SEAL\)"  with=""/>
+				<whitelist map="id_map"/>
+				<compose prefix="(IZEXCLUDE)" />
+			</data>
+		</entity>
+        <!-- add new "980  .t" based on hbz-ID -->
+        <entity name="980  " flushWith="record">
+			<concat name="t" delimiter="-">
+				<data source="035??.a" name="a">
 					<replace pattern="\(UNION_SEAL\)"  with=""/>
 					<whitelist map="id_map"/>
-					<lookup in="id_map" default="" />
-					<compose prefix="(IZEXCLUDE)(" postfix=")"/>
+					<constant value="IZEXCLUDE" />
 				</data>
                 <data source="035??.a">
 					<replace pattern="\(UNION_SEAL\)"  with=""/>
 					<whitelist map="id_map"/>
+					<lookup in="id_map" default="" />
                 </data>
 			</concat>
 		</entity>
 
 		<!-- add new "035  .a" based on 856??.u contains URL with pattern "/ezeit/?" -->
         <entity name="035  " flushWith="record">
-			<concat name="a" delimiter="">
-				<data source="856??.u">
+			<combine name="a" value="${prefix}${recordid}">
+				<data source="856??.u" name="prefix">
 					<contains string="/ezeit/?" />
-					<compose prefix="(IZEXCLUDE)(EZEIT)"/>
+					<constant value="(IZEXCLUDE)"/>
 				</data>
-                <data source="001">
-					<contains string="/ezeit/?" />
-                </data>
-			</concat>
+				<data source="001" name="recordid" />
+			</combine>
+		</entity>
+        <!-- add new "980  .t" based on 856??.u contains URL with pattern "/ezeit/?" -->
+        <entity name="980  " flushWith="record">
+			<data source="856??.u" name="t">
+				<contains string="/ezeit/?" />
+				<constant value="IZEXCLUDE-EZB" />
+			</data>
 		</entity>
 
-		<!-- TODO Fall 9xx.x als Selektions- und Suchkennzeichen in Alma -> evtl. als neues subfield -->
 
 		<!--
            >>> COPY ALL SOURCES TO TARGET <<<
