@@ -146,6 +146,10 @@ NUMBER_OF_WORKERS = 8
 LOG_FILE = 'log/e-migration.log'
 ```
 
+## Angaben zur Laufzeit
+
+Für die UB Dortmund läuft das Skript mit einem "SISIS-Kurz-Export" für die Titel mit Feld
+`0807=g` ca. 20 Sekunden. Dieser Export enthält aktuell ca. 130.000 Titel.
 
 # License
 
